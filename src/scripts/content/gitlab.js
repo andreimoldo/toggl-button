@@ -3,20 +3,44 @@
 
 'use strict';
 
-togglbutton.render('.content .page-title:not(.toggl)', {observe: true}, function (elem) {
-  var link,  description,
-    numElem = $('.page-title'),
-    titleElem = $(".issue-box .title, .issue-title"),
-    projectElem = $('.title').firstChild;
+togglbutton.render('.issue-details .detail-page-description:not(.toggl)', {observe: true}, function (elem) {
+  var link, description,
+    numElem = $(".identifier"),
+    titleElem = $(".title", elem),
+    projectElem = $("h1 .project-item-select-holder");
 
-  description = titleElem.textContent;
-  description = numElem.firstChild.textContent.trim() + " " + description.trim();
+  description = titleElem.textContent.trim();
+
+  if (numElem !== null) {
+    description = numElem.innerText.split(" ").pop().trim() + " " + description;
+  }
 
   link = togglbutton.createTimerLink({
     className: 'gitlab',
     description: description,
-    projectName: projectElem.textContent.split(' / ').pop()
+    projectName: projectElem.textContent
   });
 
-  $('.content .page-title').appendChild(link);
+  $(".detail-page-header").appendChild(link);
 });
+
+togglbutton.render('.merge-request-details .detail-page-description:not(.toggl)', {observe: true}, function (elem) {
+  var link, description,
+    numElem = $(".identifier"),
+    titleElem = $(".title", elem),
+    projectElem = $("h1 .project-item-select-holder");
+
+  description = titleElem.textContent.trim();
+  if (numElem !== null) {
+    description = "MR" + numElem.innerText.split(" ").pop().trim().replace("!", "") + "::" + description;
+  }
+
+  link = togglbutton.createTimerLink({
+    className: 'gitlab',
+    description: description,
+    projectName: projectElem.textContent
+  });
+
+  $(".detail-page-header").appendChild(link);
+});
+
